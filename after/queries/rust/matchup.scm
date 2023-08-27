@@ -1,5 +1,14 @@
 ; inherits: quote
 
+; --------------- types ---------------
+(type_arguments
+  "<" @open.typeargs
+  ">" @close.typeargs) @scope.typeargs
+
+(type_parameters
+  "<" @open.typeparams
+  ">" @open.typeparams) @scope.typeparams
+
 ; --------------- if/else ---------------
 (block (if_expression "if" @open.if_) @scope.if_)
 (expression_statement (if_expression "if" @open.if_) @scope.if_)
@@ -18,9 +27,14 @@
 ; --------------- fn/return ---------------
 (function_item
   "fn" @open.function) @scope.function
-(closure_expression parameters: (closure_parameters . "|" @open.function "|" .) body: (block)) @scope.function
+(closure_expression) @scope.function
 (return_expression
   "return" @mid.function.1)
+
+; --------------- closures ---------------
+(closure_parameters
+  "|" @open.closureparams
+  "|" @close.closureparams) @scope.closureparams
 
 ; --------------- while/loop/for + break/continue ---------------
 (for_expression . "for" @open.loop) @scope.loop
